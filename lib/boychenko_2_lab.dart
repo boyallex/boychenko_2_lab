@@ -1,36 +1,35 @@
 import 'dart:io';
 import "dart:math";
 
-// int countOfEqualStates() {
-
-// }
-List<List<int>> createEqualMatrix(List<List<int>> matrix) {
-  List<List<int>> eq_matrix = matrix;
+List<List<int>> createClearlyMinimalMatrix(List<List<int>> matrix) {
+  List<List<int>> eqvMatrix = List.from(matrix);
   int i = 0; // строка состояния, которое мы проверяем
   int j = 0;
   bool isNotEqualRow;
-  while (i < eq_matrix.length) {
-    List<int> tempRow = eq_matrix[i];
-    j = i;
+  while (i < eqvMatrix.length) {
+    List<int> tempRow = eqvMatrix[i];
+    j = i + 1;
     isNotEqualRow = true;
-    while (isNotEqualRow | (j < eq_matrix.length)) {
-      isNotEqualRow = isEqualLists(tempRow, eq_matrix[j]);
+    while (isNotEqualRow & (j < eqvMatrix.length)) {
+      isNotEqualRow = !isEqualLists(tempRow, eqvMatrix[j]);
       j++;
     }
-    if (j == eq_matrix.length) {
-      // если прошли полностью, значит состояние не изоморфно
+    if ((j == eqvMatrix.length) & isNotEqualRow) {
+      // если прошли полностью и последняя строка не идентична, значит состояние не изоморфно
       i++;
     } else {
       // если изоморфно, то удаляем второе, переименовываем и проходимся заново
       int row = 0, column = 0;
-      eq_matrix.remove(eq_matrix[j]); // удаляем строку состояния
-      while (row < eq_matrix.length) {
-        while (column < eq_matrix[row].length) {
+      j--;
+      eqvMatrix.remove(eqvMatrix[j]); // удаляем строку состояния
+
+      while (row < eqvMatrix.length) {
+        column = 0;
+        while (column < eqvMatrix[row].length) {
           if ((column == j)) {
-            eq_matrix[row].remove(eq_matrix[row][column]); // удаляем элемент
-          }
-          if (eq_matrix[row][column] == j) {
-            eq_matrix[row][column] = i;
+            eqvMatrix[row].remove(eqvMatrix[row][column]); // удаляем элемент
+          } else if (eqvMatrix[row][column] == (j + 1)) {
+            eqvMatrix[row][column] = i + 1;
           }
           column++;
         }
@@ -39,7 +38,44 @@ List<List<int>> createEqualMatrix(List<List<int>> matrix) {
       i = 0; // чтобы пройтись с начала обнуляем счетчик
     }
   }
-  return eq_matrix;
+  return eqvMatrix;
+}
+
+List<List<int>> createIsomorphicAutomation(List<List<int>> matrix) {
+  Map<int, int> map = Map.fromIterable(uniqueElements(matrix));
+  map = moveMapElements(map);
+
+  for (int i = 0; i < matrix.length; i++) {
+    for (int j = 0; j < matrix.length; j++) {
+      if (map.containsKey(matrix[i][j])) {
+        matrix[i][j] = map[matrix[i][j]]!;
+      }
+    }
+  }
+  return matrix;
+}
+
+Map<int, int> moveMapElements(Map<int, int> map) {
+  map.forEach((key, value) {
+    value = (value % map.length);
+  });
+  return map;
+}
+
+List<int> uniqueElements(List<List<int>> matrix) {
+  // возвращает уникальные ненулевые элементы матрицы
+  List<int> res = [];
+  int element;
+  for (int i = 0; i < matrix.length; i++) {
+    for (int j = 0; j < matrix.length; j++) {
+      element = matrix[i][j];
+      if ((element != 0) & res.contains(element)) {
+        res.add(element);
+      }
+    }
+  }
+  res.sort();
+  return res;
 }
 
 bool isEqualLists(List<int> listA, List<int> listB) {
@@ -47,7 +83,11 @@ bool isEqualLists(List<int> listA, List<int> listB) {
     return false;
   }
   int i = 0;
-  while ((listA[i] == listB[i]) | (i < listA.length)) {
+
+  while (i < listA.length) {
+    if (listA[i] != listB[i]) {
+      break;
+    }
     i++;
   }
   return i == listA.length;
@@ -96,4 +136,8 @@ List<List<int>> createRanodmMatrix(int n) {
     }
   }
   return matrix;
+}
+
+int factorial(int n) {
+  return n == 1 ? 1 : n * factorial(n - 1);
 }
