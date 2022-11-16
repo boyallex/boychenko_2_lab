@@ -42,41 +42,45 @@ List<List<int>> createClearlyMinimalMatrix(List<List<int>> matrix) {
 }
 
 List<List<int>> createIsomorphicAutomation(List<List<int>> matrix) {
-  Map<int, int> map = Map.fromIterable(uniqueElements(matrix));
-  map = moveMapElements(map);
+  int row1 = Random().nextInt(matrix.length);
+  int row2 = Random().nextInt(matrix.length) + 1;
+  while (row1 == row2) {
+    row1 = Random().nextInt(matrix.length);
+    row2 = Random().nextInt(matrix.length) + 1;
+  }
+  final List<int> firstRow = matrix[row1];
+
+  matrix[row1] = matrix[row2];
+  matrix[row2] = firstRow;
 
   for (int i = 0; i < matrix.length; i++) {
-    for (int j = 0; j < matrix.length; j++) {
-      if (map.containsKey(matrix[i][j])) {
-        matrix[i][j] = map[matrix[i][j]]!;
+    for (int j = 0; j < matrix.length; i++) {
+      if (matrix[i][j] == (row1 + 1)) {
+        matrix[i][j] == (row2 + 1);
+      }
+      if (matrix[i][j] == row2 + 1) {
+        matrix[i][j] == (row1 + 1);
       }
     }
   }
   return matrix;
 }
 
-Map<int, int> moveMapElements(Map<int, int> map) {
-  map.forEach((key, value) {
-    value = (value % map.length);
-  });
-  return map;
-}
-
-List<int> uniqueElements(List<List<int>> matrix) {
-  // возвращает уникальные ненулевые элементы матрицы
-  List<int> res = [];
-  int element;
-  for (int i = 0; i < matrix.length; i++) {
-    for (int j = 0; j < matrix.length; j++) {
-      element = matrix[i][j];
-      if ((element != 0) & res.contains(element)) {
-        res.add(element);
-      }
-    }
-  }
-  res.sort();
-  return res;
-}
+// List<int> uniqueElements(List<List<int>> matrix) {
+//   // возвращает уникальные ненулевые элементы матрицы
+//   List<int> res = [];
+//   int element;
+//   for (int i = 0; i < matrix.length; i++) {
+//     for (int j = 0; j < matrix.length; j++) {
+//       element = matrix[i][j];
+//       if ((element != 0) & res.contains(element)) {
+//         res.add(element);
+//       }
+//     }
+//   }
+//   res.sort();
+//   return res;
+// }
 
 bool isEqualLists(List<int> listA, List<int> listB) {
   if (listA.length != listB.length) {
@@ -93,7 +97,7 @@ bool isEqualLists(List<int> listA, List<int> listB) {
   return i == listA.length;
 }
 
-List<int> findTransientStates(List<List<String>> matrix) {
+List<int> findTransientStates(List<List<int>> matrix) {
   final int len = matrix.length;
   int j;
   List<int> deadLocksPositions = [];
@@ -103,7 +107,7 @@ List<int> findTransientStates(List<List<String>> matrix) {
     while (j < len && isZeroState) {
       try {
         if (i != j) {
-          isZeroState = int.parse(matrix[j][i]) == 0;
+          isZeroState = matrix[j][i] == 0;
         }
       } on Exception catch (e) {
         isZeroState = false;

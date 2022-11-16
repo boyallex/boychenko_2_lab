@@ -54,14 +54,17 @@ void main(List<String> arguments) {
   }
   // List<List<int>> randMatrix = funcs.createRanodmMatrix(N);
   // funcs.printMatrix(randMatrix);
+  List<int> transList = funcs.findTransientStates(matrix);
+  print("Transient states: $transList. Count: ${transList.length}.");
+  List<List<int>> ismphmatrix = funcs.createIsomorphicAutomation(matrix);
+  print("Isomorphic automate: ");
+  funcs.printMatrix(ismphmatrix);
   List<List<int>> eqvMatrix = funcs.createClearlyMinimalMatrix(matrix);
   print("\n Сlearly a minimal automaton: ");
   funcs.printMatrix(eqvMatrix);
   print("\n");
-  print("Count of isomorphic automations: ${funcs.factorial(eqvMatrix.length)}");
-  List<List<int>> ismphmatrix = funcs.createIsomorphicAutomation(eqvMatrix);
-  print("Isomorphic automate: ");
-  funcs.printMatrix(ismphmatrix);
+  print(
+      "Count of isomorphic automations: ${funcs.factorial(eqvMatrix.length)}");
   // funcs.printMatrix(matrix);
   // // вывод тупиковых состояний
 
